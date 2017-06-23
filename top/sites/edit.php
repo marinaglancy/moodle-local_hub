@@ -58,7 +58,7 @@ if (!$site = $DB->get_record("hub_site_directory", array("id"=>$edit))) {
     redirect("index.php", "Edit who?", 1);
 }
 
-$SESSION->lang = $site->lang;
+$SESSION->lang = $site->language;
 
 /// Print headings
 

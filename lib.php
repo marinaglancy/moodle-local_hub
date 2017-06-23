@@ -187,21 +187,24 @@ class local_hub {
             $site->visible = 0;
             $site->prioritise = 0;
             $this->update_site($site);
-
-            add_to_log(SITEID, 'local_hub', 'site unregistration', '', $site->id);
         }
     }
 
     /**
      * Update a site
      * @param object $site
+     * @param object $oldsite
      * @throws dml_exception if error
      */
-    public function update_site($site) {
+    public function update_site($site, $oldsite = null) {
         global $DB;
+        if ($oldsite === null) {
+            $oldsite = $DB->get_record('hub_site_directory', ['id' => $site->id]);
+        }
         $site->timemodified = time();
         $DB->update_record('hub_site_directory', $site);
         update_sendy_list($site);
+        local_hub\event\site_registration_updated::create_from_record($site, $oldsite)->trigger();
     }
 
     /**
@@ -226,6 +229,7 @@ class local_hub {
         } else {
             $site->id = $DB->insert_record('hub_site_directory', $site);
             update_sendy_list($site);
+            local_hub\event\site_registration_created::create_from_record($site)->trigger();
         }
         return $site;
     }
@@ -1113,6 +1117,7 @@ class local_hub {
 
         //if we create or update a site, it can not be deleted
         $siteinfo->deleted = 0;
+        $currentsiteinfo = null;
 
         // If update, check if the url changed, if yes it could be a potential hack attempt.
         // Make the site not visible and alert the hub administrator.
@@ -1208,7 +1213,7 @@ class local_hub {
 
         //Add or update the site into the site directory (hub)
         if (!empty($siteurltoupdate)) {
-            $this->update_site($siteinfo);
+            $this->update_site($siteinfo, $currentsiteinfo);
 
             //update the communication url if it changed
             if (!empty($currentsiteinfo) and $siteinfo->url != $currentsiteinfo->url) {
@@ -1243,9 +1248,8 @@ class local_hub {
 
         //log the operation
         if (!empty($siteurltoupdate)) {
-            //we just log, do not send an email to admin for update
+            //do not send an email to admin for update
             //(an email was sent previously if the url or name changed)
-            add_to_log(SITEID, 'local_hub', 'site update', '', $siteinfo->id);
         } else {
             // Send email to the hub administrator.
 
@@ -1265,7 +1269,6 @@ class local_hub {
             email_to_user(get_admin(), core_user::get_support_user(),
                     get_string('emailtitlesiteadded', 'local_hub', $emailinfo->name),
                     get_string('emailmessagesiteadded', 'local_hub', $emailinfo));
-            add_to_log(SITEID, 'local_hub', 'site registration', '', $site->id);
         }
 
         return $sitetohubcommunication->token;
