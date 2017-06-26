@@ -296,6 +296,9 @@ class hub_settings_form extends moodleform {
             $sendyapikey = '';
         }
 
+        // Site voting is enabled.
+        $enablesitevoting = (bool)get_config('local_hub', 'enablesitevoting');
+
         $enabled = get_config('local_hub', 'hubenabled');
 
         $recaptcha = get_config('local_hub', 'hubrecaptcha');
@@ -448,6 +451,12 @@ class hub_settings_form extends moodleform {
                 'sendyapikey', 'local_hub');
         $mform->setAdvanced('sendyapikey');
         $mform->setDefault('sendyapikey', $sendyapikey);
+
+        $mform->addElement('advcheckbox', 'enablesitevoting',
+            get_string('enablesitevoting', 'local_hub'), '');
+        $mform->setDefault('enablesitevoting', $enablesitevoting);
+        $mform->addHelpButton('enablesitevoting', 'enablesitevoting', 'local_hub');
+        $mform->setAdvanced('enablesitevoting');
 
         $this->add_action_buttons(false, get_string('update'));
     }

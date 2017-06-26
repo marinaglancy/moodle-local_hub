@@ -630,5 +630,30 @@ function xmldb_local_hub_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2017060600, 'local', 'hub');
     }
 
+    if ($oldversion < 2017062600) {
+
+        // Define table registry_votes to be created.
+        $table = new xmldb_table('registry_votes');
+
+        // Adding fields to table registry_votes.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '9', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '9', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('siteid', XMLDB_TYPE_INTEGER, '9', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('vote', XMLDB_TYPE_INTEGER, '9', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timevoted', XMLDB_TYPE_INTEGER, '9', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table registry_votes.
+        $table->add_key('userid', XMLDB_KEY_FOREIGN, array('userid'), 'user', array('id'));
+        $table->add_key('siteid', XMLDB_KEY_FOREIGN, array('siteid'), 'hub_site_directory', array('id'));
+
+        // Conditionally launch create table for registry_votes.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Hub savepoint reached.
+        upgrade_plugin_savepoint(true, 2017062600, 'local', 'hub');
+    }
+
     return true;
 }

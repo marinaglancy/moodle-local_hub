@@ -347,29 +347,28 @@ function linkcheck($url) {
 }
 
 function vote_for_site($siteid, $votemodifier) {
-    die('NOT CONVERTED YET!');
-    global $USER;
+    global $USER, $DB;
     $message = false;
-    if ($site = get_record('hub_site_directory', 'id', $siteid)) {  // site exists
+    if ($site = $DB->get_record('hub_site_directory', ['id' => $siteid])) {  // site exists
         $country = $site->country;
-        if (record_exists('registry_votes', 'userid', $USER->id, 'siteid', $site->id)) {
-            $message = notify('You have already voted for "'.s($site->name).'"', 'notifyproblem', 'center', true);
+        if ($DB->record_exists('registry_votes', ['userid' => $USER->id, 'siteid' => $site->id])) {
+            core\notification::add('You have already voted for "'.s($site->name).'"', \core\output\notification::NOTIFY_ERROR);
         } else {
-            $coolsite = new Object;
+            $coolsite = new stdClass();
             $coolsite->id = $site->id;
             $coolsite->cool = $site->cool + $votemodifier;
             $coolsite->cooldate = time();
-            if (update_record('hub_site_directory', $coolsite)) {
-                $vote = new Object;
+            if ($DB->update_record('hub_site_directory', $coolsite)) {
+                $vote = new stdClass();
                 $vote->userid = $USER->id;
                 $vote->siteid = $site->id;
                 $vote->vote = $votemodifier;
                 $vote->timevoted = time();
-                if (insert_record('registry_votes', $vote)) {
+                if ($DB->insert_record('registry_votes', $vote)) {
                     if ($votemodifier==1) {
-                        $message = notify('Your positive feeling for "'.s($site->name).'" has been recorded', 'notifysuccess', 'center', true);
+                        $message = core\notification::add('Your positive feeling for "'.s($site->name).'" has been recorded', \core\output\notification::NOTIFY_SUCCESS);
                     } else {
-                        $message = notify('Your negative feeling against "'.s($site->name).'" has been recorded', 'notifyproblem', 'center', true);
+                        $message = core\notification::add('Your negative feeling against "'.s($site->name).'" has been recorded', \core\output\notification::NOTIFY_ERROR);
                     }
                 }
             }

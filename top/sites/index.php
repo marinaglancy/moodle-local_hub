@@ -17,9 +17,6 @@ $country = optional_param('country', '', PARAM_ALPHA);
 $cool = optional_param('cool', 0, PARAM_INT);
 $uncool = optional_param('uncool', 0, PARAM_INT);
 $sitevoting = optional_param('voting', 0, PARAM_INT);
-//disable this on live until MDLSITE-2787 gets resolved
-$sitevoting = 0;
-$USER->sitevoting = false;
 
 $edit = optional_param('edit', '', PARAM_ALPHA);
 
@@ -28,6 +25,7 @@ $PAGE->set_url(new moodle_url('/local/hub/top/sites'));
 $PAGE->requires->css('/local/hub/style/hub.css');
 
 $isadmin = ismoodlesiteadmin();
+$enablesitevoting = get_config('local_hub', 'enablesitevoting');
 $USER->siteediting = false;
 if ($isadmin && $edit == "on") {
     $USER->siteediting = true;
@@ -115,7 +113,7 @@ if ($country!==null && array_key_exists($country, $countries)) {
     $list->data = Array();
 
     // Get old voting records
-    if (!empty($USER->sitevoting)) {
+    if ($enablesitevoting && !empty($USER->sitevoting)) {
         $oldvotes = $DB->get_records_menu('registry_votes', array('userid'=>$USER->id), '', 'siteid, vote');
         $countvotes = $DB->get_records_select_menu('registry_votes', 'siteid > 0 GROUP BY siteid', null, '', 'siteid, count(*) number');
     }
@@ -149,7 +147,7 @@ if ($country!==null && array_key_exists($country, $countries)) {
             $properties .= '&nbsp;<img title="Cool site!" src="/pix/s/cool.gif" height="15" width="15" alt="Cool!" border="0">';
         }
 
-        if (!empty($USER->sitevoting) && $site->privacy) {
+        if ($enablesitevoting && !empty($USER->sitevoting) && $site->privacy) {
             $properties .= '&nbsp;&nbsp;&nbsp;';
             if (!isset($oldvotes[$site->id])) {
                 $properties .= '<a title="'.get_string('ilikesite', 'local_hub').'" href="/sites/index.php?cool='.$site->id.'&amp;country='.$site->country.'&amp;sesskey='.sesskey().'"><img src="/pix/s/yes.gif" height="17" width="14" alt="" border="0" /></a>';
@@ -227,7 +225,7 @@ echo html_writer::end_tag('div');
 
 if (isset($list)) {
     echo html_writer::start_tag('div', array('class'=>'boxwidthwide boxaligncenter', 'style'=>'padding:20px;'));
-    if ($sitevoting) {
+    if ($enablesitevoting) {
         echo '<div style="margin-left:20%;margin-right:20%;text-align:center;font-size:0.9em;">';
         if (!isloggedin() || isguestuser()) {
             echo 'Sites can be marked "Cool" if three or more people vote for them.  Cool sites are promoted around moodle.org and other places. To vote on sites you need to be <a href="/login/index.php">logged in</a>.';
@@ -246,7 +244,7 @@ if (isset($list)) {
                 $options['voting'] = -1;
                 $button = new single_button(new moodle_url('/sites/index.php', $options), 'Hide voting buttons for these sites');
             }
-            $OUTPUT->render($button);
+            echo $OUTPUT->render($button);
         }
         echo "<br /></div>";
     }

@@ -78,6 +78,7 @@ if (!empty($fromform) and confirm_sesskey()) {
     set_config('password', 
             empty($fromform->password)?null:$fromform->password, 'local_hub');
 
+    set_config('enablesitevoting', empty($fromform->enablesitevoting) ? 0 : 1, 'local_hub');
 
     //if privacy settings is downgraded to 'private', then unregister from the hub
     $currentprivacy = get_config('local_hub', 'privacy');
