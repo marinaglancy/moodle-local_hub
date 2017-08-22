@@ -38,6 +38,7 @@ function local_hub_create_contact_user($email, $firstname) {
     // Need an id, can't use id=0. would rather not use id=1, lets fool the api while we're still trying to use a fake user to send to.
     $contactuser->id = 2; // Used to retrieve the mailcharset user preference which defaults to 0.
 
+    $contactuser->username = '';
     $contactuser->email = $email;
     $contactuser->firstname = $firstname;
     $contactuser->lastname = '';

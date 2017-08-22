@@ -48,7 +48,6 @@ class local_hub_lib_testcase extends advanced_testcase
             'http://learn.moodle.net',  // More tests.
             'https://learn.gold.ac.uk', // Normal site dan worked with.
             'http://devmooc.net/', // Problem site MDLSITE-3433.
-            'http://englishwat.com/qvilearn/', // Problem site which doesn't like header requests MDLSITE-3920.
         );
 
         foreach ($validsites as $site) {
@@ -79,6 +78,7 @@ class local_hub_lib_testcase extends advanced_testcase
 
     public function test_create_hub_token() {
         $this->resetAfterTest(true);
+        set_config('extendedusernamechars', 1);
 
         $hub = new local_hub();
         $url = 'http://example.com';
@@ -105,6 +105,7 @@ class local_hub_lib_testcase extends advanced_testcase
     public function test_register_site() {
         global $DB;
         $this->resetAfterTest(true);
+        set_config('extendedusernamechars', 1);
 
         $hub = new local_hub();
         $originalurl = 'http://example.com';
@@ -148,6 +149,7 @@ class local_hub_lib_testcase extends advanced_testcase
     public function test_unregister_site() {
         global $DB;
         $this->resetAfterTest(true);
+        set_config('extendedusernamechars', 1);
 
         $hub = new local_hub();
         $url = "http://example.com";
@@ -171,6 +173,7 @@ class local_hub_lib_testcase extends advanced_testcase
     public function test_get_site_by_url() {
         global $DB;
         $this->resetAfterTest(true);
+        set_config('extendedusernamechars', 1);
 
         $hub = new local_hub();
         $url = "http://example.com";
@@ -215,7 +218,7 @@ class local_hub_lib_testcase extends advanced_testcase
     public function test_get_sites() {
         global $DB;
         $this->resetAfterTest(true);
-        set_config('noemailever', 1);
+        set_config('extendedusernamechars', 1);
 
         $hub = new local_hub();
         $url = "http://example.com";
@@ -237,6 +240,7 @@ class local_hub_lib_testcase extends advanced_testcase
     public function test_add_site() {
         global $DB;
         $this->resetAfterTest(true);
+        set_config('extendedusernamechars', 1);
 
         $hub = new local_hub();
         $url = "http://example.com";
@@ -262,6 +266,7 @@ class local_hub_lib_testcase extends advanced_testcase
     public function test_delete_site() {
         global $DB;
         $this->resetAfterTest(true);
+        set_config('extendedusernamechars', 1);
 
         $hub = new local_hub();
         $url = "http://example.com";
