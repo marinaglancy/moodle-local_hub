@@ -344,7 +344,7 @@ class local_hub_lib_testcase extends advanced_testcase
         'badges' => '',
         'issuedbadges' => '',
         'mobileservicesenabled' => '',
-        'mobilenotificacionsenabled' => '',
+        'mobilenotificationsenabled' => '',
         'registereduserdevices' => '',
         'registeredactiveuserdevices' => '',
         );

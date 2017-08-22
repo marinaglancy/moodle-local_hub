@@ -606,7 +606,7 @@ function xmldb_local_hub_upgrade($oldversion) {
             $dbman->add_field($table, $newfield);
         }
 
-        $newfield = new xmldb_field('mobilenotificacionsenabled', XMLDB_TYPE_INTEGER, '1', null, null, null, '-1', 'mobileservicesenabled');
+        $newfield = new xmldb_field('mobilenotificationsenabled', XMLDB_TYPE_INTEGER, '1', null, null, null, '-1', 'mobileservicesenabled');
 
         // Conditionally launch add new field.
         if (!$dbman->field_exists($table, $newfield)) {
@@ -628,6 +628,22 @@ function xmldb_local_hub_upgrade($oldversion) {
         }
 
         upgrade_plugin_savepoint(true, 2017060600, 'local', 'hub');
+    }
+
+    if ($oldversion < 2017082200) {
+
+        // Rename field mobilenotificacionsenabled on table hub_site_directory to mobilenotificationsenabled.
+        $table = new xmldb_table('hub_site_directory');
+        $field = new xmldb_field('mobilenotificacionsenabled', XMLDB_TYPE_INTEGER, '1', null, null, null, '-1', 'mobileservicesenabled');
+
+        // Launch rename field mobilenotificacionsenabled -> mobilenotificationsenabled.
+        // The previous upgrade step was already corrected to use the correct name for the field so in the most cases there is nothing to do here at all.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, 'mobilenotificationsenabled');
+        }
+
+        // Hub savepoint reached.
+        upgrade_plugin_savepoint(true, 2017082200, 'local', 'hub');
     }
 
     return true;

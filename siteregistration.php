@@ -76,7 +76,7 @@ $password                   = optional_param('password', '', PARAM_TEXT);
 $badges                     = optional_param('badges', '', PARAM_INT);
 $issuedbadges               = optional_param('issuedbadges','', PARAM_INT);
 $mobileservicesenabled      = optional_param('mobileservicesenabled','', PARAM_INT);
-$mobilenotificacionsenabled = optional_param('mobilenotificacionsenabled','', PARAM_INT);
+$mobilenotificationsenabled = optional_param('mobilenotificationsenabled','', PARAM_INT);
 $registereduserdevices      = optional_param('registereduserdevices','', PARAM_INT);
 $registeredactiveuserdevices = optional_param('registeredactiveuserdevices','', PARAM_INT);
 
@@ -124,7 +124,7 @@ $sitevalues = array('name' => $name,
         'badges' => $badges,
         'issuedbadges' => $issuedbadges,
         'mobileservicesenabled' => $mobileservicesenabled,
-        'mobilenotificacionsenabled' => $mobilenotificacionsenabled,
+        'mobilenotificationsenabled' => $mobilenotificationsenabled,
         'registereduserdevices' => $registereduserdevices,
         'registeredactiveuserdevices' => $registeredactiveuserdevices,
     );

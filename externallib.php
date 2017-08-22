@@ -137,7 +137,7 @@ class local_hub_external extends external_api {
                                 'badges' => new external_value(PARAM_INT, '-1 if private info, otherwise number of badges.', VALUE_OPTIONAL),
                                 'issuedbadges' => new external_value(PARAM_INT, '-1 if private info, otherwise number of issued badges.', VALUE_OPTIONAL),
                                 'mobileservicesenabled' => new external_value(PARAM_INT, '-1 if private info, otherwise whether mobile services are enabled.', VALUE_OPTIONAL),
-                                'mobilenotificacionsenabled' => new external_value(PARAM_INT, '-1 if private info, otherwise whether mobile notifications are enabled.', VALUE_OPTIONAL),
+                                'mobilenotificationsenabled' => new external_value(PARAM_INT, '-1 if private info, otherwise whether mobile notifications are enabled.', VALUE_OPTIONAL),
                                 'registereduserdevices' => new external_value(PARAM_INT, '-1 if private info, number of users registered devices.', VALUE_OPTIONAL),
                                 'registeredactiveuserdevices' => new external_value(PARAM_INT, '-1 if private info, number of active users registered devices.', VALUE_OPTIONAL),
                             ), 'site info')
@@ -160,6 +160,7 @@ class local_hub_external extends external_api {
 
         $params = self::validate_parameters(self::update_site_info_parameters(),
                         array('siteinfo' => $siteinfo));
+        error_log("HUB : ".print_r($params,true));
 
         //check that the hub can access the site
         $hubmanager = new local_hub();
@@ -874,7 +875,7 @@ class local_hub_external extends external_api {
             $siteinfo['public'] = $map[$site->privacy]; //this maintains what moodle.org is doing with its data there.
             // Mobile related information.
             $siteinfo['mobileservicesenabled'] = $site->mobileservicesenabled;
-            $siteinfo['mobilenotificacionsenabled'] = $site->mobilenotificacionsenabled;
+            $siteinfo['mobilenotificationsenabled'] = $site->mobilenotificationsenabled;
             $siteinfo['registereduserdevices'] = $site->registereduserdevices;
             $siteinfo['registeredactiveuserdevices'] = $site->registeredactiveuserdevices;
 
@@ -937,7 +938,7 @@ class local_hub_external extends external_api {
                             'serverstring' => new external_value(PARAM_TEXT, 'a http header'),
                             'override' => new external_value(PARAM_INT, 'force avoids linkchecking'),
                             'mobileservicesenabled' => new external_value(PARAM_INT, '-1 if private info, otherwise whether mobile services are enabled.', VALUE_OPTIONAL),
-                            'mobilenotificacionsenabled' => new external_value(PARAM_INT, '-1 if private info, otherwise whether mobile notifications are enabled.', VALUE_OPTIONAL),
+                            'mobilenotificationsenabled' => new external_value(PARAM_INT, '-1 if private info, otherwise whether mobile notifications are enabled.', VALUE_OPTIONAL),
                             'registereduserdevices' => new external_value(PARAM_INT, '-1 if private info, number of users registered devices.', VALUE_OPTIONAL),
                             'registeredactiveuserdevices' => new external_value(PARAM_INT, '-1 if private info, number of active users registered devices.', VALUE_OPTIONAL),
                         ), 'site register info')
