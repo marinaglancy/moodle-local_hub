@@ -266,6 +266,11 @@ if ($secretexists and !$urlexists) { //the site has been moved or the site has b
             $freshmoodletoken = $registrationattempt['freshmoodletoken'];
         } else {
             // Otherwise throw an error (to avoid spam attack).
+            \local_hub\event\site_registration_failed::create([
+                'other' => [
+                    'url' => $sitevalues['url'],
+                    'secreturl' => $sitewithsamesecret ? $sitewithsamesecret->url : null,
+                    'emailsent' => 0]])->trigger();
             throw new moodle_exception('freshmoodleregistrationerror2', 'local_hub',
                 new moodle_url($url));
         }
@@ -300,6 +305,12 @@ if ($secretexists and !$urlexists) { //the site has been moved or the site has b
     email_to_user($contactuser, get_admin(),
             get_string('emailtitleurlalreadyexists', 'local_hub', $emailinfo),
             get_string('emailmessageurlalreadyexists', 'local_hub', $emailinfo));
+
+    \local_hub\event\site_registration_failed::create([
+        'other' => [
+            'url' => $sitevalues['url'],
+            'secreturl' => $sitewithsamesecret ? $sitewithsamesecret->url : null,
+            'emailsent' => 1]])->trigger();
 
     throw new moodle_exception('freshmoodleregistrationerror', 'local_hub',
             new moodle_url($url), $sitewithsameurl);
@@ -361,7 +372,6 @@ function process_registration ($sitevalues, $secretexists, $urlexists, $sitewith
             $newtoken = $hub->register_site($sitevalues, $sitevalues->url);
         } else {
             //log the code logic error (it should never happen)
-            add_to_log(SITEID, 'local_hub', 'registration code logic error', '', $sitevalues->url);
             throw new moodle_exception('codelogicerror', 'local_hub');
         }
 

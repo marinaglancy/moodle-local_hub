@@ -178,6 +178,7 @@ $string['errorunregistration'] = 'An error occurred during hub unregistration, t
 $string['errorwrongpostdata'] = 'Some POST data are missing, please use the Moodle registration form.';
 $string['event_site_registraion_created'] = 'Site registered';
 $string['event_site_registraion_updated'] = 'Site registration updated';
+$string['event_site_registraion_failed'] = 'Site registration failed';
 $string['hideguestbutton'] = 'Moodle changed the option \'Guest login button\' to the value \'Hide\'.';
 $string['failunregistrationofprivate'] = 'Could not unregister from the hub, try again on the register page ({$a}).';
 $string['featured'] = 'Featured';
